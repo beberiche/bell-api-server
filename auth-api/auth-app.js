@@ -14,6 +14,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/health', (_, res) => {
+  res.status(200).json({ message: 'auth-Api 정상 운영중' });
+});
+
 app.use(authRoutes);
 
 app.use((err, req, res, next) => {

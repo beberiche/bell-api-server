@@ -17,6 +17,7 @@ const verifyPasswordHash = async (password, hashedPassword) => {
   try {
     passwordIsValid = await bcrypt.compare(password, hashedPassword);
     console.log(passwordIsValid, password, hashedPassword);
+    return true;
   } catch (err) {
     createAndThrowError('Failed to verify password.', 500);
   }
@@ -43,7 +44,7 @@ const getHashedPassword = async (req, res, next) => {
   const rawPassword = req.params.password;
   try {
     const hashedPassword = await createPasswordHash(rawPassword);
-    res.status(200).json({hashed: hashedPassword});
+    res.status(200).json({ hashed: hashedPassword });
   } catch (err) {
     next(err);
   }
