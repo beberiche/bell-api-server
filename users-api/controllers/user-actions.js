@@ -1,9 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-
 const axios = require('axios');
 const { createAndThrowError, createError } = require('../helpers/error');
-
 const User = require('../models/user');
 
 const internal_error_message = '예기치 못한 오류로 요청을 수행하지 못했습니다.';
@@ -119,7 +117,9 @@ const verifyUser = async (req, res, next) => {
 
   let existingUser;
   try {
-    existingUser = await User.findOne({ email: email });
+    existingUser = await User.findOne({
+      email,
+    });
   } catch (err) {
     const error = createError(err.message || internal_error_message, 500);
     return next(error);
@@ -131,7 +131,6 @@ const verifyUser = async (req, res, next) => {
   }
 
   try {
-    console.log(password, existingUser);
     const token = await getTokenForUser(password, existingUser.password);
     res.status(200).json({ token: token, userId: existingUser.id });
   } catch (err) {
@@ -139,55 +138,12 @@ const verifyUser = async (req, res, next) => {
   }
 };
 
-const updateUser = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const newPassword = req.body.newPassword;
-
-  try {
-    validateCredentials(email, password);
-    validateCredentials(email, newPassword);
-  } catch (err) {
-    return next(err);
-  }
-
-  let existingUser;
-  try {
-    existingUser = await User.find({ email: email });
-  } catch (err) {
-    const error = createError(err.message || internal_error_message, 500);
-    return next(error);
-  }
-
-  if (!existingUser) {
-    const error = createError('존재하지 않는 사용자입니다.', 422);
-    return next(error);
-  }
-
-  try {
-    const updateUser = await User.update({ password: newPassword });
-    res.status(200).json({
-      message: '사용자 정보를 성공적으로 수정했습니다.',
-      user: updateUser.toObject(),
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
 const deleteUser = async (req, res, next) => {
   const email = req.body.email;
-  const password = req.body.password;
-
-  try {
-    validateCredentials(email, password);
-  } catch (err) {
-    return next(err);
-  }
 
   let existingUser;
   try {
-    existingUser = await User.find({ email: email });
+    existingUser = await User.findOne({ email });
   } catch (err) {
     const error = createError(err.message || internal_error_message, 500);
     return next(error);
@@ -199,12 +155,10 @@ const deleteUser = async (req, res, next) => {
   }
 
   try {
-    const deleteUser = await User.remove({
-      email: email,
-      password: password,
-    });
-    res.status(204).json({
-      message: '사용자 정보를 성공적으로 삭제했습니다.',
+    await User.deleteOne({ email });
+
+    res.status(200).json({
+      message: '사용자 정보를 삭제했습니다.',
     });
   } catch (err) {
     next(err);
@@ -213,5 +167,4 @@ const deleteUser = async (req, res, next) => {
 
 exports.createUser = createUser;
 exports.verifyUser = verifyUser;
-exports.updateUser = updateUser;
 exports.deleteUser = deleteUser;

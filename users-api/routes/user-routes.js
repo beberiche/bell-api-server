@@ -8,5 +8,5 @@ router.post('/signup', userActions.createUser);
 
 router.post('/login', userActions.verifyUser);
 
-router.get('/update', userActions.updateUser);
+router.delete('/user', userActions.deleteUser);
 module.exports = router;

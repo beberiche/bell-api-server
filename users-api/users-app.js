@@ -6,6 +6,8 @@ const userRoutes = require('./routes/user-routes');
 
 const app = express();
 
+const axios = require('axios');
+
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -16,6 +18,21 @@ app.use((req, res, next) => {
 });
 
 app.use(userRoutes);
+
+app.get('/user-health', (_, res) => {
+  res.status(200).json({ message: 'user-Api 정상 운영중' });
+});
+
+app.get('/auth-health', async (_, res, next) => {
+  try {
+    const response = await axios.get(
+      `http://${process.env.AUTH_API_ADDRESSS}/health`
+    );
+    res.status(200).json(response.data);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.use((err, req, res, next) => {
   let code = 500;
