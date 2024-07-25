@@ -7,11 +7,6 @@
 - [x] `API` 서버 구성
 - [x] `DB`와의 기본 `CRUD` 구현
 
-### 추가 작업 사항
-
----
-
-- [ ] github action + Helm 을 활용한 `commit/merge` 트리거 프로젝트 배포 설계
 
 </br>
 </br>
@@ -34,20 +29,18 @@
 
 `Auth-api` 는 서버 내부의 통신을 통해 `Users-api` 에 필요한 기능을 제공하는 `internal` 서버로, 해시 함수 기반의 비밀번호 암호화, 토큰 생성 등의 기능을 제공해주고 있습니다.
 
-실제 `Client,Server,DB` 간의 통신 흐름을 살펴보면 다음과 같습니다.
+실제 `Client, Server, DB` 간의 통신 흐름을 살펴보면 다음과 같습니다.
 
 ![api 백엔드 환경 구성](./images/api-back-end.png)
 
 ## DB
 
-`DB` 의 경우, `MongoDB`를 활용했습니다. `Mongoose+Express` 의 사례가 많고, 무료 `DB` 클러스터 서비스를 제공하기 때문에 로컬 환경에서도 외부와의 통신을 제어해보기 쉬워 선택했습니다.
-
-`DynamoDB` 를 활용하여 `Kubernetes` 클러스터 내부에서, `DB` 환경을 제어를 해보려고 했으나, 시간 여건 상 이 부분은 적용하지 못했습니다.
+`DB` 의 경우, `MongoDB`를 활용했습니다. `Mongoose+Express` 의 사례가 많고, 무료 `DB` 클러스터 서비스를 제공하기 때문에 로컬 환경에서도 외부와의 통신을 제어하고자 선택했습니다.
 
 </br>
 </br>
 
-## 미해결점
+## 해결점
 
 ### github action + Helm 을 활용한 프로젝트 배포 설계
 
